@@ -1,0 +1,12 @@
+#átkonvertálja az összes pdfet, ami a pdfDir mappában található és menti txt fájlként őket a txtDir mappába
+def convertMultiple(pdfDir, txtDir):
+    if pdfDir == "": pdfDir = os.getcwd() + "\\" 
+    for pdf in os.listdir(pdfDir): #végigiterál az összes pdf-en a mappában
+        fileExtension = pdf.split(".")[-1]
+        if fileExtension == "pdf":
+            pdfFilename = pdfDir + pdf 
+            text = convert(pdfFilename) #megkapja stringként a pdf szövegét
+            textFilename = txtDir + pdf + ".txt"
+            textFile = open(textFilename, "w", encoding='utf-8') #text fájl készítése
+            textFile.write(text) #a pdfből kinyert tartalom text fájlba írása
+           
