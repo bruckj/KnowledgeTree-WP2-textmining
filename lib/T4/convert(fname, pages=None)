@@ -1,4 +1,4 @@
-#maga a konvertálás ebben a függvényben történik meg, visszatérési értéke a szöveg tartalma stringként
+#paraméterként kapott fájlon végrehajtja a konvertálást, kimenete a szöveg sztringként
 def convert(fname, pages=None):
     if not pages:
         pagenums = set()
