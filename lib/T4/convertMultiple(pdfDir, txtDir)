@@ -1,4 +1,5 @@
-#átkonvertálja az összes pdfet, ami a pdfDir mappában található és menti txt fájlként őket a txtDir mappába
+#első paraméter egy mappa, melyben a pdfek találhatók, ezeken végig megy, meghívja rájuk a convert() fv-t, 
+#az előállított fájlokat a második parméterkét adott könyvtárba teszi
 def convertMultiple(pdfDir, txtDir):
     if pdfDir == "": pdfDir = os.getcwd() + "\\" 
     for pdf in os.listdir(pdfDir): #végigiterál az összes pdf-en a mappában
