@@ -26,17 +26,18 @@ def referencesFind(txtDir, metaPath):
                 for line in references.finditer(text):
                         number, author, publication, otherInfo = line.groups()      # itt vannak a capturing groupok
                         number_list.append(number)                                  # a hivatkozásszám, ami alapján majd keresünk a txt-ben
+                        for number in number_list:                                  # [1] ilyen formátumba keresse
+                                number = number.replace(number, "["+number+"]")                 
                         author_list.append(author)                                  # szerző(k)
                         publication_list.append(publication)                        # publikációs cím
                         for publication in publication_list:                        # ideiglenes megoldás, most még a fájlok neve a publication
                                 if "?" in publication:                              # és fájlnévben nem örül a '?'-nek
-                                        publication = publication[:-2]              # később az adott fáj ID-ja lesz                         
+                                        publication = publication[:-2]              # később az adott fáj ID-ja lesz                       
                         otherInfo_list.append(otherInfo)                            # minden más (miben, hol publikálták, stb.)
                         ref_list.append(line)
 
 # keresi a szövegben a cross referenceket a felismert számok alapján és kiírja fájlba (jelenleg cikk címe + txt)
-                        for number in number_list:
-                                number = number.replace(number, "["+number+"]")                 # [1] ilyen formátumba keresse
+
                                 for count, line in enumerate(sents):
                                         line_list.append(line) 
                                         if number in line and "]" not in line_list[count-1]:    # ha van az előző mondatban '[' (tehát másik hivatkozás) ne írja ki
@@ -44,4 +45,4 @@ def referencesFind(txtDir, metaPath):
                                                 f = open(filename, "ab+")                       # ha létezik append, ha nem akkor kreál egy ilyen fájlt
                                                 f.write(line.encode("utf-8"))
                                                 f.close()
-        textFile.close()
+                textFile.close()
