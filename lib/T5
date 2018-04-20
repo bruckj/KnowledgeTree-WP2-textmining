@@ -30,9 +30,9 @@ def referencesFind(txtDir, metaPath):
                                 number = number.replace(number, "["+number+"]")                 
                         author_list.append(author)                                  # szerző(k)
                         publication_list.append(publication)                        # publikációs cím
-                        for publication in publication_list:                        # ideiglenes megoldás, most még a fájlok neve a publication
-                                if "?" in publication:                              # és fájlnévben nem örül a '?'-nek
-                                        publication = publication[:-2]              # később az adott fáj ID-ja lesz                       
+                        for publication in publication_list:                                             # ideiglenes megoldás, most még a fájlok neve a publication
+                                remove_punctuation_map = dict((ord(char), None) for char in '\/*?:"<>|')
+                                publication = publication.translate(remove_punctuation_map)              # később az adott fáj ID-ja lesz                       
                         otherInfo_list.append(otherInfo)                            # minden más (miben, hol publikálták, stb.)
                         ref_list.append(line)
 
