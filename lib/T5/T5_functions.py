@@ -4,16 +4,25 @@ import re
 import io
 import json
 
+def replaceNumbers(text):
+        numberblocks = re.compile(r'(\[(\d+)\]\–\[(\d+)\])', re.MULTILINE)
+        for line in numberblocks.finditer(text):
+                whole, min_number, max_number = line.groups()
+                rangeList = list(range(int(min_number), int(max_number)+1))
+                b =','.join("["+ str(i)+"]" for i in rangeList)
+                line = re.sub(numberblocks, b, str(line))
+        return text
 
 def referencesFind(txtDir, metaPath):
 
-        refs = {}                               #python dict, amiben az egymashoz tartozo elemek vannak (id - hivatkozas - szoveg)
-        
+        refs = {}               #python dict, amiben az egymashoz tartozo elemek vannak (id - hivatkozas - szoveg)
         for txt in os.listdir(txtDir):
                 textFile = open(txtDir + txt, "r", encoding='utf-8')
                 text = textFile.read()
                 name = textFile.name
+                replaceNumbers(text)
                 sents = nltk.sent_tokenize(text)
+                replaceNumbers(text)
                 references = re.compile(r'\(\'(\d+)\'\,\s\'(.*?)\'\)', re.MULTILINE)            #egyszerusitettem a regexet, hogy felismerje a egyseges formara hozott referenciakat
                 line_list = []                                                                  
                 number_list = []
@@ -31,19 +40,25 @@ def referencesFind(txtDir, metaPath):
                                 #remove_punctuation_map = dict((ord(char), None) for char in '\/*?:"<>|')
                                 #publication = publication.translate(remove_punctuation_map)
                         for number in number_list:
-                                number = number.replace(number, "["+number+"]")
+                                number1 = number.replace(number, "["+number)
+                                number2 = number.replace(number, number+"]")
                         ref_list.append(line)
 
                         if publication not in refs[name]:
                                 refs[name][publication] = {}
                                 
                         for count, line in enumerate(sents):
-                                line_list.append(line) 
-                                if number in line and "]" not in line_list[count-1]:
-                                        lineBefore = line_list[count] + line_list[count-1]
+                                line_list.append(line)
+                                lineBefore = 0
+                
+                                if (number1 or number2) in line:
+                                        if "]" not in line_list[count-1]:
+                                                lineBefore = line_list[count] + line_list[count-1]
+                                        else:
+                                                lineBefore = line_list[count]
                                         if lineBefore not in refs[name][publication]:
                                                 refs[name][publication] = lineBefore
-
+                                 
                                
         textFile.close()
 
@@ -55,4 +70,5 @@ txtDir = 'C:\\Users\\Lenovo\\Documents\\files\\'
 metaPath = 'C:\\Users\\Lenovo\\Documents\\'
 
 referencesFind(txtDir, metaPath)
+
 
