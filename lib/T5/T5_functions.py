@@ -4,8 +4,6 @@ import re
 import io
 import json
 from copy import copy, deepcopy
-from mocsok import replaceNumbers
-
 
 def referencesFind(txtDir, metaPath):
 
