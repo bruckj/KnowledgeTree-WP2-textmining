@@ -72,7 +72,9 @@ def convertJSONMultiple(pdfDir, JSONDir):
         if fileExtension == "pdf":
             pdfFilename = pdfDir + pdf 
             text = convert(pdfFilename) #megkapja stringként a pdf szövegét
-              #ahhoz, hogy az Abstract is egy kulcs legyen külön sorban kell szerepelnie 
+            text = re.sub(r'\n([0-9]{1,5})', " ", text)
+            
+            #ahhoz, hogy az Abstract is egy kulcs legyen külön sorban kell szerepelnie 
             textR = text.replace('Abstract','\nAbstract\n') 
             if 'Abstract' not in textR:
                 textR = text.replace('ABSTRACT','\nAbstract\n')
