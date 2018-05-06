@@ -1,0 +1,49 @@
+import nltk
+import os
+import re
+import io
+import json
+from copy import copy
+
+def replaceNumbers(text):
+
+        sents = nltk.sent_tokenize(text)
+        numberblocks = re.compile(r'(\[(\d+)\]\–\[(\d+)\])', re.MULTILINE)
+        whole_list = []
+        text_list = []
+        rangeDict = {}
+
+        for line in numberblocks.finditer(text):
+                whole, nr1, nr2 = line.groups()
+                whole_list.append(whole)
+                rangeDict[whole] = []
+
+
+        for word in whole_list:
+            x = word
+            if x in rangeDict:
+                if x == word:
+                    word_rev = word.replace("[", "").replace("]","")
+                    min_number = word_rev.split('–',1)[0]
+                    max_number = word_rev.rsplit('–',1)[1]
+                    rangeList = list(range(int(min_number), int(max_number)+1))
+                    b =','.join("["+ str(i)+"]" for i in rangeList)
+                    rangeDict[x]=[b]
+            
+        for line in sents:
+                for x in rangeDict:
+                    if x in line:
+                        notafkinlist = ''.join(fk for fk in rangeDict[x])
+                        lajn = line.replace(x, notafkinlist)
+                        text_list.append(lajn)
+                
+
+        keci = ''.join(y for y in text_list)
+        text = text + keci
+
+        return(text)
+
+
+
+
+
